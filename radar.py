@@ -12,8 +12,7 @@ from multiprocessing import Process, Manager, Array, Pool
 # files and directories we need
 RESOURCES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources/")
 MAIN_SCORES_DIR = os.path.join(RESOURCES_DIR, "main_scores/")
-RBP_BINDING_SITE_DIR = os.path.join(RESOURCES_DIR, "rbp_binding_sites")
-ALL_RBP_SITES = os.path.join(RBP_BINDING_SITE_DIR, "all_RBP_peaks_unmerged_labeled_sorted.bed")
+ALL_RBP_SITES = os.path.join(RESOURCES_DIR, "all_RBP_peaks_unmerged_labeled_sorted.bed")
 SIGNIFICANT_PEAKS = os.path.join(RESOURCES_DIR, "significant_peaks")
 MUTATIONAL_BURDEN_MAT = os.path.join(RESOURCES_DIR, "rbp_peak_significance")
 REG_POWER_MAT = os.path.join(RESOURCES_DIR, "regulator_pval.txt")
@@ -50,7 +49,7 @@ def search_score_files(tup):
 				key = (line[0], line[1], line[2], line[3].upper(), line[4])
 				# load main scores for each variant we're considering
 				if key in var_set:
-					variants[key] = line[5:]
+					variants[key] = variants[key] = line[5:10] + ["1" if line[10] != "0" else "0", line[11]]
 					curr_found += 1
 					if curr_found == cnt:  # break early if we've found all requested variants on this chromosome
 						break
