@@ -1,0 +1,13 @@
+download and place data context:
+
+Significant peaks (significant_peaks, text file, 95 MB)
+http://radar.gersteinlab.org/resources/significant_peaks
+
+RBP binding site data (all_RBP_peaks_unmerged_labeled_sorted.bed, BED file, 42 MB)
+http://radar.gersteinlab.org/resources/all_RBP_peaks_unmerged_labeled_sorted.bed
+
+RBP peak mutational burden data (rbp_peak_significance, text file, 95 MB)
+http://radar.gersteinlab.org/resources/rbp_peak_significance
+
+RBP regulatory power data (regulator_pval.txt, text file, 5 KB)
+http://radar.gersteinlab.org/resources/regulator_pval.txt
