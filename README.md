@@ -127,7 +127,9 @@ Now we are ready to run the software and score our variants. Move into the recen
 
 To score this set of variants without any tissue-specific scores, run the following command:
 
-`python radar.py -b ../Breast.bed -o ..`
+```
+python radar.py -b ../Breast.bed -o ..
+```
 
 A head of the output file is shown below:
 
@@ -148,7 +150,9 @@ chr1 83442 83443 C T 0 0 0 0 0 0 0 0 0
 
 To score this set of variants with the universal scores and the key genes score, run the following command:
 
-`python radar.py -b ../Breast.bed -o .. -c BRCA -kg`
+```
+python radar.py -b ../Breast.bed -o .. -c BRCA -kg
+```
 
 A head of the output file is shown below:
 
@@ -169,7 +173,9 @@ chr1 83442 83443 C T 0 0 0 0 0 0 0 0 0 0
 
 To score this set of variants with the universal scores and the mutation recurrence score, run the following command:
 
-`python radar.py -b ../Breast.bed -o .. -c BRCA -mr`
+```
+python radar.py -b ../Breast.bed -o .. -c BRCA -mr
+```
 
 A head of the output file is shown below:
 
@@ -190,7 +196,9 @@ chr1 83442 83443 C T 0 0 0 0 0 0 0 0 0 0
 
 To score this set of variants with the universal scores and the RBP regulation power score, run the following command:
 
-`python radar.py -b ../Breast.bed -o .. -c BRCA -rp`
+```
+python radar.py -b ../Breast.bed -o .. -c BRCA -rp
+```
 
 A head of the output file is shown below:
 
@@ -211,7 +219,9 @@ chr1 83442 83443 C T 0 0 0 0 0 0 0 0 0 0
 
 To score this set of variants with all scores (universal and all tissue-specific scores), run the following command:
 
-`python radar.py -b ../Breast.bed -o .. -c BRCA -kg -mr -rp`
+```
+python radar.py -b ../Breast.bed -o .. -c BRCA -kg -mr -rp
+```
 
 A head of the output file is shown below:
 
@@ -238,7 +248,7 @@ Runtime was measured on three sets of variants:
 
 ### Input
 
-Alexandrov breast cancer variants (25 MB)
+The example Alexandrov breast cancer variants (25 MB)
 `example/example_input_BRCA`
 
 ```
@@ -257,14 +267,14 @@ chr1 986796 986797 T G PD5935a
 
 The following command will run RADAR and produce an output file in the `radar_output/` directory.
 
-`python radar.py -b Breast.bed -o radar_output/ -c BRCA -kg -mr -rp`
+```
+python radar.py -b Breast.bed -o radar_output/ -c BRCA -kg -mr -rp
+```
 
 
 ### Output
 
-example/example_output_BRCA.bed
-
-The example Alexandrov breast cancer variants (35 MB)
+The example Alexandrov breast cancer variants output (35 MB)
 `example/example_output_BRCA.bed`
 
 (Note that the ellipsis denotes truncated lines; it is not in the output.)
@@ -278,6 +288,6 @@ chr1 985340 985341 G T 1.15940591176 0.0 4.53503723229e-33 0 1.11097289519 0 2.2
 chr1 986796 986797 T G 1.07533132443 0.0 4.53503723229e-33 0 0 0 1.07533132443 1 1 1 3 4.07533132443
 ```
 
-## For any questions related to GitHub repo, please contact:
-* donghoon.lee at yale.edu
-* jo-jo.feng at yale.edu
+## For any questions related to this GitHub repo, please contact:
+* donghoon.lee at yale dot edu
+* jo-jo.feng at yale dot edu
