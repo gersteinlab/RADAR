@@ -288,6 +288,6 @@ chr1 985340 985341 G T 1.15940591176 0.0 4.53503723229e-33 0 1.11097289519 0 2.2
 chr1 986796 986797 T G 1.07533132443 0.0 4.53503723229e-33 0 0 0 1.07533132443 1 1 1 3 4.07533132443
 ```
 
-## For any questions related to this GitHub repo, please contact:
-* donghoon.lee at yale dot edu
-* jo-jo.feng at yale dot edu
+## For any questions, please contact:
+* jingzhang.wti.bupt at gmail dot com
+* jason.j.liu at yale dot edu 
