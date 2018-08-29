@@ -11,13 +11,14 @@ from multiprocessing import Process, Manager, Array, Pool
 
 # files and directories we need
 RESOURCES_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources/")
-MAIN_SCORES_DIR = os.path.join(RESOURCES_DIR, "main_scores/")
+MAIN_SCORES_DIR = os.path.join(RESOURCES_DIR, "main_scores/{}/")
 ALL_RBP_SITES = os.path.join(RESOURCES_DIR, "all_RBP_peaks_unmerged_labeled_sorted.bed")
 SIGNIFICANT_PEAKS = os.path.join(RESOURCES_DIR, "significant_peaks")
 MUTATIONAL_BURDEN_MAT = os.path.join(RESOURCES_DIR, "rbp_peak_significance")
 REG_POWER_MAT = os.path.join(RESOURCES_DIR, "regulator_pval.txt")
 
 CANCERS = ['BLCA', 'BRCA', 'CESC', 'COAD', 'ESCA', 'GBM', 'HNSC', 'KICH', 'KIRC', 'KIRP', 'LIHC', 'LUAD', 'LUSC', 'SKCM', 'PAAD', 'PRAD', 'STAD', 'THCA', 'UCEC']
+ASSEMBLIES = ['hg19', 'hg38']
 
 # class that represents a variant and stores its scores
 class Variant:
@@ -60,6 +61,7 @@ def search_score_files(tup):
 parser = argparse.ArgumentParser(description='RADAR')
 
 parser.add_argument('-b', '--bed', help="Variant BED file", required=True)
+parser.add_argument('-a', '--assembly', help="Genome assembly", default="hg19")
 parser.add_argument('-o', '--outdir', help="Output directory", required=True)
 parser.add_argument('-c', '--cancer', help="Cancer type for tissue-specific scoring", required=False)
 parser.add_argument('-kg', '--keygenes', action="store_true", default=False, help="Compute key genes score")
@@ -68,8 +70,14 @@ parser.add_argument('-rp', '--regpower', action="store_true", default=False, hel
 
 args = parser.parse_args()
 
+assembly = args.assembly
+if assembly not in ASSEMBLIES:
+	print("Invalid assembly")
+	exit(1)
+MAIN_SCORES_DIR = MAIN_SCORES_DIR.format(assembly)
+
 # cancer type used for tissue-specific scores
-if args.keygenes or args.mutrec or args.regpower:
+if assembly == 'hg19' and (args.keygenes or args.mutrec or args.regpower):
 	cancer_type = args.cancer
 	try:
 		cancer_index = CANCERS.index(cancer_type)
@@ -84,7 +92,7 @@ with open(args.bed) as file:
 		variant_string_list.append("\t".join(line.split()[:5]))
 variants_bedtool = pybedtools.BedTool("\n".join(variant_string_list), from_string=True)
 
-if args.keygenes:
+if args.keygenes and assembly == 'hg19':
 	# find locations for each requested significant gene in this particular cancer
 	significant_peaks_string_list = []
 	with open(SIGNIFICANT_PEAKS) as file:
@@ -99,7 +107,7 @@ if args.keygenes:
 	variants_bedtool = variants_bedtool.intersect(significant_peaks_bedtool, c=True)
 
 # include mutational burden
-if args.mutrec:
+if args.mutrec and assembly == 'hg19':
 	# string list of burdened RBP peaks
 	burdened_peaks_string_list = []
 	with open(MUTATIONAL_BURDEN_MAT) as file:
@@ -113,7 +121,7 @@ if args.mutrec:
 	variants_bedtool = variants_bedtool.intersect(burdened_peaks_bedtool, c=True)
 
 # include regulatory power
-if args.regpower:
+if args.regpower and assembly == 'hg19':
 	# load regulatory power matrix
 	with open(REG_POWER_MAT, 'r') as file:
 		next(file)
@@ -143,13 +151,13 @@ for line in variants_bedtool:
 		# variants[key] = Variant(key)
 		variants_ts_scores[key] = [None, None, None]
 		# only need to load these once
-		if args.keygenes:  # gene-target scores are in the 6th column
+		if args.keygenes and assembly == 'hg19':  # gene-target scores are in the 6th column
 			val = "1" if line[5] != "0" else "0"  # score is 1 if intersects at least one gene
 			variants_ts_scores[key][0] = val
-		if args.mutrec:
+		if args.mutrec and assembly == 'hg19':
 			val = "1" if line[5 + (args.keygenes)] != "0" else "0"  # score is 0 if intersects at least one burdened peak
 			variants_ts_scores[key][1] = val
-	if args.regpower:
+	if args.regpower and assembly == 'hg19':
 		# rbp in 9th, 10th, or 11th column depending on whether gene-target and mutational burden scores requested
 		rbp = line[8 + args.keygenes + args.mutrec]
 		# score 1 if intersects at least one powerful rbp in this cancer, else 0
@@ -170,9 +178,9 @@ output_file = os.path.join(args.outdir, "{}.radar_out.bed".format(bed_name))
 header = ['chr', 'start', 'stop', 'ref', 'alt', 'cross_species_conservation', 'RBP_binding_hub', 'GERP', 'Evofold', 'motif_disruption', 'RBP_gene_association', 'total_universal']
 with open(output_file, 'w') as outfile:
 	outfile.write("\t".join(header))
-	if args.keygenes: outfile.write("\tkey_genes")
-	if args.mutrec: outfile.write("\tmutation_recurrence")
-	if args.regpower: outfile.write("\tRBP_regulation_power")
+	if args.keygenes and assembly == 'hg19': outfile.write("\tkey_genes")
+	if args.mutrec and assembly == 'hg19': outfile.write("\tmutation_recurrence")
+	if args.regpower and assembly == 'hg19': outfile.write("\tRBP_regulation_power")
 	outfile.write("\ttotal_tissue_specific")
 	outfile.write("\ttotal_score\n")
 	for var in variant_list:
