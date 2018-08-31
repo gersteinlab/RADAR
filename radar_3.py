@@ -50,7 +50,7 @@ def search_score_files(tup):
 				key = (line[0], line[1], line[2], line[3].upper(), line[4])
 				# load main scores for each variant we're considering
 				if key in var_set:
-					variants[key] = variants[key] = line[5:10] + ["1" if line[10] != "0" else "0", line[11]]
+					variants[key] = variants[key] = line[5:12]
 					curr_found += 1
 					if curr_found == cnt:  # break early if we've found all requested variants on this chromosome
 						break
